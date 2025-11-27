@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail Organisation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-pic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            color: #555;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .news-item, .event-item, .message-item {
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .news-item:hover, .event-item:hover, .message-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .news-item h3, .event-item h3, .message-item h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .meta-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .badge-urgent {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-high {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .badge-featured {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .member-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .member-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .member-card:hover {
+            background: #e9ecef;
+            transform: scale(1.05);
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .notification-badge {
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-tabs {
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🏢 Portail Organisation</div>
+            <div class="user-info">
+                <span><strong>Jean Dupont</strong></span>
+                <div class="profile-pic">JD</div>
+                <button class="btn btn-secondary" onclick="logout()">Déconnexion</button>
+            </div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">📊 Tableau de bord</button>
+            <button class="tab-btn" onclick="showTab('news')">📰 Actualités</button>
+            <button class="tab-btn" onclick="showTab('events')">📅 Événements</button>
+            <button class="tab-btn" onclick="showTab('messages')">💬 Messages <span class="notification-badge">3</span></button>
+            <button class="tab-btn" onclick="showTab('members')">👥 Membres</button>
+            <button class="tab-btn" onclick="showTab('documents')">📁 Documents</button>
+            <button class="tab-btn" onclick="showTab('announcements')">📢 Annonces</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="content-section active">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>👥 Membres Actifs</h3>
+                    <div class="number">2,147</div>
+                </div>
+                <div class="stat-card">
+                    <h3>📰 Actualités</h3>
+                    <div class="number">342</div>
+                </div>
+                <div class="stat-card">
+                    <h3>📅 Événements à venir</h3>
+                    <div class="number">12</div>
+                </div>
+                <div class="stat-card">
+                    <h3>📁 Documents</h3>
+                    <div class="number">1,856</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔥 Actualités récentes</h2>
+                <div class="news-item">
+                    <h3>Nouvelle stratégie 2025 <span class="badge badge-featured">À LA UNE</span></h3>
+                    <div class="meta-info">📅 19 Nov 2025 | ✍️ Marie Lambert | 👁️ 1,234 vues</div>
+                    <p>Découvrez notre nouvelle stratégie pour l'année 2025 avec des objectifs ambitieux...</p>
+                </div>
+                <div class="news-item">
+                    <h3>Résultats du trimestre Q3</h3>
+                    <div class="meta-info">📅 15 Nov 2025 | ✍️ Pierre Martin | 👁️ 892 vues</div>
+                    <p>Les résultats du troisième trimestre montrent une croissance significative...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📅 Prochains événements</h2>
+                <div class="event-item">
+                    <h3>🎉 Assemblée Générale Annuelle</h3>
+                    <div class="meta-info">📅 25 Novembre 2025, 14:00 | 📍 Salle de conférence A | 👥 87/150 inscrits</div>
+                    <button class="btn btn-primary">S'inscrire</button>
+                </div>
+                <div class="event-item">
+                    <h3>🎓 Formation Leadership</h3>
+                    <div class="meta-info">📅 2 Décembre 2025, 09:00 | 📍 Centre de formation | 👥 24/30 inscrits</div>
+                    <button class="btn btn-primary">S'inscrire</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News -->
+        <div id="news" class="content-section">
+            <div class="card">
+                <h2>📰 Toutes les actualités</h2>
+                <input type="text" class="search-box" placeholder="🔍 Rechercher une actualité...">
+                <div class="news-item">
+                    <h3>Nouvelle stratégie 2025 <span class="badge badge-featured">À LA UNE</span></h3>
+                    <div class="meta-info">📅 19 Nov 2025 | ✍️ Marie Lambert | 📂 Stratégie | 👁️ 1,234 vues</div>
+                    <p>Découvrez notre nouvelle stratégie pour l'année 2025 avec des objectifs ambitieux de croissance et d'innovation...</p>
+                    <button class="btn btn-primary">Lire la suite</button>
+                </div>
+                <div class="news-item">
+                    <h3>Résultats du trimestre Q3</h3>
+                    <div class="meta-info">📅 15 Nov 2025 | ✍️ Pierre Martin | 📂 Finance | 👁️ 892 vues</div>
+                    <p>Les résultats du troisième trimestre montrent une croissance significative de 15%...</p>
+                    <button class="btn btn-primary">Lire la suite</button>
+                </div>
+                <div class="news-item">
+                    <h3>Nouveau partenariat stratégique</h3>
+                    <div class="meta-info">📅 12 Nov 2025 | ✍️ Sophie Dubois | 📂 Partenariats | 👁️ 645 vues</div>
+                    <p>Nous sommes fiers d'annoncer un nouveau partenariat avec une organisation internationale...</p>
+                    <button class="btn btn-primary">Lire la suite</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events -->
+        <div id="events" class="content-section">
+            <div class="card">
+                <h2>📅 Événements</h2>
+                <div class="event-item">
+                    <h3>🎉 Assemblée Générale Annuelle</h3>
+                    <div class="meta-info">📅 25 Novembre 2025, 14:00 - 18:00 | 📍 Salle de conférence A | 🎫 87/150 inscrits</div>
+                    <p>Venez participer à notre assemblée générale annuelle pour discuter des résultats et des projets futurs.</p>
+                    <button class="btn btn-primary">S'inscrire</button>
+                </div>
+                <div class="event-item">
+                    <h3>🎓 Formation Leadership</h3>
+                    <div class="meta-info">📅 2 Décembre 2025, 09:00 - 17:00 | 📍 Centre de formation | 🎫 24/30 inscrits</div>
+                    <p>Formation intensive sur les compétences en leadership pour les managers.</p>
+                    <button class="btn btn-primary">S'inscrire</button>
+                </div>
+                <div class="event-item">
+                    <h3>🎊 Gala de fin d'année</h3>
+                    <div class="meta-info">📅 15 Décembre 2025, 19:00 - 23:00 | 📍 Grand Hôtel | 🎫 156/200 inscrits</div>
+                    <p>Célébrons ensemble les réussites de l'année lors de notre gala annuel.</p>
+                    <button class="btn btn-primary">S'inscrire</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages" class="content-section">
+            <div class="card">
+                <h2>💬 Messages</h2>
+                <button class="btn btn-primary" style="margin-bottom: 20px;">✉️ Nouveau message</button>
+                <div class="message-item">
+                    <h3>Réunion de département <span class="badge badge-high">NON LU</span></h3>
+                    <div class="meta-info">👤 Marie Lambert | 📅 19 Nov 2025, 10:30</div>
+                    <p>Bonjour, je souhaiterais planifier une réunion de département pour la semaine prochaine...</p>
+                    <button class="btn btn-primary">Répondre</button>
+                </div>
+                <div class="message-item">
+                    <h3>Document à valider <span class="badge badge-high">NON LU</span></h3>
+                    <div class="meta-info">👤 Pierre Martin | 📅 18 Nov 2025, 15:20</div>
+                    <p>Pourriez-vous valider le document que je vous ai envoyé concernant le projet X...</p>
+                    <button class="btn btn-primary">Répondre</button>
+                </div>
+                <div class="message-item">
+                    <h3>Invitation événement <span class="badge badge-high">NON LU</span></h3>
+                    <div class="meta-info">👤 Sophie Dubois | 📅 17 Nov 2025, 09:45</div>
+                    <p>Je vous invite à participer à notre prochain événement networking...</p>
+                    <button class="btn btn-primary">Répondre</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members -->
+        <div id="members" class="content-section">
+            <div class="card">
+                <h2>👥 Annuaire des membres</h2>
+                <input type="text" class="search-box" placeholder="🔍 Rechercher un membre...">
+                <div class="member-list">
+                    <div class="member-card">
+                        <div class="member-avatar">ML</div>
+                        <h3>Marie Lambert</h3>
+                        <p>Directrice Marketing</p>
+                        <p style="color: #666; font-size: 14px;">Département Marketing</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">PM</div>
+                        <h3>Pierre Martin</h3>
+                        <p>Responsable Finance</p>
+                        <p style="color: #666; font-size: 14px;">Département Finance</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">SD</div>
+                        <h3>Sophie Dubois</h3>
+                        <p>Chef de Projet</p>
+                        <p style="color: #666; font-size: 14px;">Département IT</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">LB</div>
+                        <h3>Luc Bernard</h3>
+                        <p>Consultant Senior</p>
+                        <p style="color: #666; font-size: 14px;">Département Conseil</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">AR</div>
+                        <h3>Anne Robert</h3>
+                        <p>DRH</p>
+                        <p style="color: #666; font-size: 14px;">Département RH</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">TC</div>
+                        <h3>Thomas Caron</h3>
+                        <p>Développeur Lead</p>
+                        <p style="color: #666; font-size: 14px;">Département IT</p>
+                        <button class="btn btn-primary" style="margin-top: 10px;">Contacter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div id="documents" class="content-section">
+            <div class="card">
+                <h2>📁 Bibliothèque de documents</h2>
+                <input type="text" class="search-box" placeholder="🔍 Rechercher un document...">
+                <button class="btn btn-primary" style="margin-bottom: 20px;">📤 Télécharger un document</button>
+                <div class="news-item">
+                    <h3>📄 Rapport annuel 2024</h3>
+                    <div class="meta-info">📂 Finance | 📊 PDF - 2.4 MB | 📥 234 téléchargements | 📅 15 Nov 2025</div>
+                    <button class="btn btn-primary">Télécharger</button>
+                </div>
+                <div class="news-item">
+                    <h3>📋 Guide des procédures internes</h3>
+                    <div class="meta-info">📂 Administration | 📊 PDF - 1.8 MB | 📥 456 téléchargements | 📅 10 Nov 2025</div>
+                    <button class="btn btn-primary">Télécharger</button>
+                </div>
+                <div class="news-item">
+                    <h3>📊 Présentation stratégie 2025</h3>
+                    <div class="meta-info">📂 Stratégie | 📊 PPTX - 5.2 MB | 📥 189 téléchargements | 📅 8 Nov 2025</div>
+                    <button class="btn btn-primary">Télécharger</button>
+                </div>
+                <div class="news-item">
+                    <h3>📑 Formulaire de demande de congés</h3>
+                    <div class="meta-info">📂 RH | 📊 DOCX - 0.3 MB | 📥 892 téléchargements | 📅 1 Nov 2025</div>
+                    <button class="btn btn-primary">Télécharger</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements -->
+        <div id="announcements" class="content-section">
+            <div class="card">
+                <h2>📢 Annonces</h2>
+                <div class="news-item" style="border-left-color: #dc3545;">
+                    <h3>🚨 Maintenance système <span class="badge badge-urgent">URGENT</span></h3>
+                    <div class="meta-info">📅 Actif du 20 Nov au 21 Nov 2025 | 👤 Admin Système</div>
+                    <p>Une maintenance système est prévue ce weekend. Le portail sera indisponible samedi de 22h à dimanche 6h.</p>
+                </div>
+                <div class="news-item" style="border-left-color: #ff6b6b;">
+                    <h3>📋 Mise à jour des politiques <span class="badge badge-high">IMPORTANT</span></h3>
+                    <div class="meta-info">📅 Actif jusqu'au 30 Nov 2025 | 👤 Direction RH</div>
+                    <p>Veuillez prendre connaissance des nouvelles politiques de l'organisation disponibles dans la section documents.</p>
+                </div>
+                <div class="news-item">
+                    <h3>🎉 Nouveau service membre</h3>
+                    <div class="meta-info">📅 Actif depuis le 15 Nov 2025 | 👤 Équipe Communication</div>
+                    <p>Un nouveau service de mentorat est désormais disponible pour tous les membres. Inscrivez-vous dès maintenant!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                alert('Déconnexion réussie!');
+                // Redirect logic here
+            }
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const viewCounts = document.querySelectorAll('.meta-info');
+            viewCounts.forEach(view => {
+                if (view.textContent.includes('vues')) {
+                    const current = parseInt(view.textContent.match(/\d+/)[0]);
+                    view.textContent = view.textContent.replace(/\d+/, current + Math.floor(Math.random() * 3));
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
